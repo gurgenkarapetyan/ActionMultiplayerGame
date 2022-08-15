@@ -26,6 +26,8 @@ protected:
 
 	void PrimaryAttack();
 	void PrimaryInteract();
+
+	void PrimaryAttackTimeElapsed() const;
 	
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -39,4 +41,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnimMontage;
+
+	FTimerHandle PrimaryAttackTimerHandle;
 };

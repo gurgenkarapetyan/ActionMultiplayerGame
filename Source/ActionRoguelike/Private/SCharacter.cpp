@@ -54,6 +54,16 @@ void ASCharacter::MoveRight(float Value)
 
 void ASCharacter::PrimaryAttack()
 {
+	if (AttackAnimMontage)
+	{
+		PlayAnimMontage(AttackAnimMontage);
+	}
+	
+	GetWorldTimerManager().SetTimer(PrimaryAttackTimerHandle, this, &ASCharacter::PrimaryAttackTimeElapsed, 0.2f);
+}
+
+void ASCharacter::PrimaryAttackTimeElapsed() const
+{
 	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	const FTransform SpawnTransform = FTransform(GetControlRotation(), HandLocation);
 

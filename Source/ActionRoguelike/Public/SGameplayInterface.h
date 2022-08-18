@@ -21,6 +21,6 @@ class ACTIONROGUELIKE_API ISGameplayInterface
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Interact(APawn* InstigatorPawn);
 };

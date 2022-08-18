@@ -27,10 +27,10 @@ private:
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 
 protected:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* BaseMesh;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* LidMesh;
 
 private:

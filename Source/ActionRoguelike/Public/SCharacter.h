@@ -27,7 +27,7 @@ protected:
 	void PrimaryAttack();
 	void PrimaryInteract();
 
-	void PrimaryAttackTimeElapsed() const;
+	void PrimaryAttackTimeElapsed();
 	
 protected:
 	UPROPERTY(VisibleAnywhere)

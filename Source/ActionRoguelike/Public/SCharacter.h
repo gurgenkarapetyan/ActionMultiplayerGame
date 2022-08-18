@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class USInteractionComponent;
+class USAttributeComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -46,4 +47,7 @@ protected:
 	UAnimMontage* AttackAnimMontage;
 
 	FTimerHandle PrimaryAttackTimerHandle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	USAttributeComponent* AttributeComponent;
 };

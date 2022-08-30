@@ -16,9 +16,15 @@ class ACTIONROGUELIKE_API USAttributeComponent : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	USAttributeComponent();
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	static USAttributeComponent* GetAttributes(const AActor* FromActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes", meta = (DisplayName = "isAlive"))
+	static bool IsActorAlive(const AActor* Actor);
 	
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-	bool ApplyHealthChange(float Delta);
+	bool ApplyHealthChange(AActor* Instigator, float Delta);
 
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive();

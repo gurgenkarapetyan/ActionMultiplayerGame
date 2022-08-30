@@ -13,11 +13,11 @@ USAttributeComponent::USAttributeComponent()
 	Health = 100.f;
 }
 
-bool USAttributeComponent::ApplyHealthChange(float Delta)
+bool USAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
 {
 	Health += Delta;
 
-	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
+	OnHealthChanged.Broadcast(Instigator, this, Health, Delta);
 	
 	return true;
 }
@@ -25,4 +25,25 @@ bool USAttributeComponent::ApplyHealthChange(float Delta)
 bool USAttributeComponent::IsAlive()
 {
 	return Health > 0.f;
+}
+
+USAttributeComponent* USAttributeComponent::GetAttributes(const AActor* FromActor)
+{
+	if (FromActor)
+	{
+		return Cast<USAttributeComponent>(FromActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	}
+
+	return nullptr;
+}
+
+bool USAttributeComponent::IsActorAlive(const AActor* Actor)
+{
+	USAttributeComponent* const AttributeComponent = GetAttributes(Actor);
+	if (AttributeComponent)
+	{
+		return AttributeComponent->IsAlive();
+	}
+
+	return false;
 }

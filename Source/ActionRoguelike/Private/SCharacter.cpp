@@ -2,6 +2,7 @@
 
 #include "SCharacter.h"
 
+#include "SActionComponent.h"
 #include "SAttributeComponent.h"
 #include "SInteractionComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -23,6 +24,7 @@ ASCharacter::ASCharacter()
 
 	InteractionComponent = CreateDefaultSubobject<USInteractionComponent>(TEXT("Interaction Component"));
 	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>(TEXT("Attributes Component"));
+	ActionComponent = CreateDefaultSubobject<USActionComponent>(TEXT("Action Component"));
 	
 	//GetCharacterMovement()->bOrientRotationToMovement = true;
 
@@ -43,6 +45,9 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ASCharacter::SprintStart);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ASCharacter::SprintStop);
+	
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 }
 
@@ -91,4 +96,14 @@ void ASCharacter::PrimaryInteract()
 	}
 	
 	InteractionComponent->PrimaryInteract();
+}
+
+void ASCharacter::SprintStart()
+{
+	ActionComponent->StartActionByName(this, "Sprint");
+}
+
+void ASCharacter::SprintStop()
+{
+	ActionComponent->StopActionByName(this, "Sprint");
 }

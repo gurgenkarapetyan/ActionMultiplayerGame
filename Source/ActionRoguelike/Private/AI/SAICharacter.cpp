@@ -7,6 +7,8 @@
 #include "BrainComponent.h"
 #include "SAttributeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "SWorldUserWidget.h"
 #include "Perception/PawnSensingComponent.h"
 
 ASAICharacter::ASAICharacter()
@@ -40,12 +42,21 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 		{
 			SetTargetActor(InstigatorActor);
 		}
+
+		if (ActiveHealthBar == nullptr)
+		{
+			ActiveHealthBar = CreateWidget<USWorldUserWidget>(GetWorld(), HealthBarWidgetClass);
+			if (ActiveHealthBar)
+			{
+				ActiveHealthBar->AttachedActor = this;
+				ActiveHealthBar->AddToViewport();
+			}
+		}
 		
 		if (NewHealth <= 0.f)
 		{
 			// Stop BT
-			const AAIController* const AIController = Cast<AAIController>(GetController());
-			if (AIController)
+			if (const AAIController* const AIController = Cast<AAIController>(GetController()))
 			{
 				AIController->GetBrainComponent()->StopLogic("Killed");
 			}
@@ -60,8 +71,7 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 
 void ASAICharacter::SetTargetActor(AActor* NewTarget)
 {
-	AAIController* const AIC = Cast<AAIController>(GetController());
-	if (AIC)
+	if (AAIController* const AIC = Cast<AAIController>(GetController()))
 	{
 		AIC->GetBlackboardComponent()->SetValueAsObject("TargetActor", NewTarget);;
 	}

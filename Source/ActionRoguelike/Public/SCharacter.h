@@ -10,6 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class USInteractionComponent;
 class USAttributeComponent;
+class USActionComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -25,6 +26,10 @@ protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 
+	void SprintStart();
+
+	void SprintStop();
+	
 	void PrimaryAttack();
 	void PrimaryInteract();
 
@@ -48,6 +53,9 @@ protected:
 
 	FTimerHandle PrimaryAttackTimerHandle;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USAttributeComponent* AttributeComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USActionComponent* ActionComponent;
 };

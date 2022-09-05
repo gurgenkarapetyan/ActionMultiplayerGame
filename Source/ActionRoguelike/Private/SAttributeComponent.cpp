@@ -39,8 +39,7 @@ USAttributeComponent* USAttributeComponent::GetAttributes(const AActor* FromActo
 
 bool USAttributeComponent::IsActorAlive(const AActor* Actor)
 {
-	USAttributeComponent* const AttributeComponent = GetAttributes(Actor);
-	if (AttributeComponent)
+	if (USAttributeComponent* const AttributeComponent = GetAttributes(Actor))
 	{
 		return AttributeComponent->IsAlive();
 	}

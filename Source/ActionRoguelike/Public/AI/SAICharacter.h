@@ -9,6 +9,7 @@
 
 class UPawnSensingComponent;
 class USAttributeComponent;
+class USWorldUserWidget;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
@@ -34,5 +35,10 @@ protected:
 	USAttributeComponent* AttributeComponent;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UPawnSensingComponent* PawnSensingComponent;	
+	UPawnSensingComponent* PawnSensingComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> HealthBarWidgetClass;
+
+	USWorldUserWidget* ActiveHealthBar;
 };

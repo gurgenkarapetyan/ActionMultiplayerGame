@@ -22,6 +22,9 @@ public:
 	void AddAction(TSubclassOf<USAction> ActionClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
+	void RemoveAction(USAction* ActionToRemove);
+	
+	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool StartActionByName(AActor* Instigator, FName ActionName);
 	
 	UFUNCTION(BlueprintCallable, Category = "Action")

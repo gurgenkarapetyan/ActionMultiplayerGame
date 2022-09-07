@@ -12,3 +12,7 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 {
 	
 }
+
+USAction* USAction::IsRunning()
+{
+}

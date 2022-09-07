@@ -48,6 +48,15 @@ void USActionComponent::AddAction(TSubclassOf<USAction> ActionClass)
 	}	
 }
 
+void USActionComponent::RemoveAction(USAction* ActionToRemove)
+{
+	if (ensure(ActionToRemove && ActionToRemove->IsRunning()))
+	{
+		return;
+	}
+	Actions.Remove(ActionToRemove);
+}
+
 bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 {
 	for (USAction* Action : Actions)

@@ -79,7 +79,7 @@ void USSignificanceComponent::RegisterWithManager()
 		};
 
 		// Register
-		FName Tag = GetOwner()->GetClass()->GetFName();
+		const FName Tag = GetOwner()->GetClass()->GetFName();
 		SignificanceManager->RegisterObject(this, Tag, SignificanceFunc, USignificanceManager::EPostSignificanceType::Sequential, PostSignificanceFunc);
 	}
 }
@@ -156,7 +156,7 @@ void USSignificanceComponent::PostSignificanceUpdate(USignificanceManager::FMana
 }
 
 
-float USSignificanceComponent::GetSignificanceByDistance(float DistanceSqrd) const
+float USSignificanceComponent::GetSignificanceByDistance(const float DistanceSqrd) const
 {
 	const int32 NumThresholds = Thresholds.Num();
 	if (NumThresholds == 0)
@@ -185,7 +185,7 @@ float USSignificanceComponent::GetSignificanceByDistance(float DistanceSqrd) con
 }
 
 
-void USSignificanceComponent::UpdateParticleSignificance(float NewSignificance)
+void USSignificanceComponent::UpdateParticleSignificance(const float NewSignificance) const
 {
 	// @TODO: Activate/Play resets significance, meaning we can't set the significance if things like the muzzle aren't yet playing.
 	

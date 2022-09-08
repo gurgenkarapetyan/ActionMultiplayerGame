@@ -13,11 +13,11 @@ void USGameViewportClient::Tick(float DeltaTime)
 	if (USignificanceManager* SignificanceManager = FSignificanceManagerModule::Get(World))
 	{
 		// Update once per frame, using only Player 0
-		if (APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0))
+		if (const APlayerController* const PlayerController = UGameplayStatics::GetPlayerController(World, 0))
 		{
 			FVector ViewLocation;
 			FRotator ViewRotation;
-			PC->GetPlayerViewPoint(ViewLocation, ViewRotation);
+			PlayerController->GetPlayerViewPoint(ViewLocation, ViewRotation);
 
 			// Viewpoints
 			TArray<FTransform> TransformArray;

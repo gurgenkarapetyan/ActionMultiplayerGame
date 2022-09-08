@@ -6,21 +6,15 @@
 #include "SActionComponent.h"
 
 
-
-
-
 void USAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
-	AActor* OwningActor = GetOwningActor();
-	if (OwningActor)
+	if (const AActor* const OwningActor = GetOwningActor())
 	{
 		ActionComp = Cast<USActionComponent>(OwningActor->GetComponentByClass(USActionComponent::StaticClass()));
 	}
 }
-
-
 
 void USAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {

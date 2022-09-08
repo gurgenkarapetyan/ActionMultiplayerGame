@@ -8,10 +8,6 @@
 #include "Sound/SoundCue.h"
 
 
-
-
-
-
 ASDashProjectile::ASDashProjectile()
 {
 	TeleportDelay = 0.2f;
@@ -20,14 +16,12 @@ ASDashProjectile::ASDashProjectile()
 	MoveComp->InitialSpeed = 6000.f;
 }
 
-
 void ASDashProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
 	GetWorldTimerManager().SetTimer(TimerHandle_DelayedDetonate, this, &ASDashProjectile::Explode, DetonateDelay);
 }
-
 
 void ASDashProjectile::Explode_Implementation()
 {
@@ -50,7 +44,6 @@ void ASDashProjectile::Explode_Implementation()
 	//Super::Explode_Implementation();
 }
 
-
 void ASDashProjectile::TeleportInstigator()
 {
 	AActor* ActorToTeleport = GetInstigator();
@@ -60,11 +53,11 @@ void ASDashProjectile::TeleportInstigator()
 		ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(), false, false);
 
 		// Play shake on the player we teleported
-		APawn* InstigatorPawn = Cast<APawn>(ActorToTeleport);
-		APlayerController* PC = Cast<APlayerController>(InstigatorPawn->GetController());
-		if (PC && PC->IsLocalController())
+		const APawn* const InstigatorPawn = Cast<APawn>(ActorToTeleport);
+		APlayerController* const PlayerController = Cast<APlayerController>(InstigatorPawn->GetController());
+		if (PlayerController && PlayerController->IsLocalController())
 		{
-			PC->ClientStartCameraShake(ImpactShake);
+			PlayerController->ClientStartCameraShake(ImpactShake);
 		}
 
 	}

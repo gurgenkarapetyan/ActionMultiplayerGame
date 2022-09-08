@@ -7,8 +7,6 @@
 #include "Net/UnrealNetwork.h"
 
 
-
-
 void USAction::Initialize(USActionComponent* NewActionComp)
 {
 	ActionComp = NewActionComp;
@@ -22,9 +20,9 @@ bool USAction::CanStart_Implementation(AActor* Instigator)
 		return false;
 	}
 
-	USActionComponent* Comp = GetOwningComponent();
+	const USActionComponent* const ActionComponent = GetOwningComponent();
 	
-	if (Comp->ActiveGameplayTags.HasAny(BlockedTags))
+	if (ActionComponent->ActiveGameplayTags.HasAny(BlockedTags))
 	{
 		return false;
 	}
@@ -73,8 +71,7 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 UWorld* USAction::GetWorld() const
 {
 	// Outer is set when creating action via NewObject<T>
-	AActor* Actor = Cast<AActor>(GetOuter());
-	if (Actor)
+	if (const AActor* const Actor = Cast<AActor>(GetOuter()))
 	{
 		return Actor->GetWorld();
 	}

@@ -6,10 +6,6 @@
 #include "SAction.h"
 
 
-
-
-
-
 void ASPowerup_Action::Interact_Implementation(APawn* InstigatorPawn)
 {
 	// Make sure we have instigator & that action class was set up
@@ -18,20 +14,19 @@ void ASPowerup_Action::Interact_Implementation(APawn* InstigatorPawn)
 		return;
 	}
 
-	USActionComponent* ActionComp = Cast<USActionComponent>(InstigatorPawn->GetComponentByClass(USActionComponent::StaticClass()));
 	// Check if Player already has action class
-	if (ActionComp)
+	if (USActionComponent* const ActionComponent = Cast<USActionComponent>(InstigatorPawn->GetComponentByClass(USActionComponent::StaticClass())))
 	{
-		if (ActionComp->GetAction(ActionToGrant))
+		if (ActionComponent->GetAction(ActionToGrant))
 		{
 			//UE_LOG(LogTemp, Log, TEXT("Instigator already has action of class: %s"), *GetNameSafe(ActionToGrant));
-			FString DebugMsg = FString::Printf(TEXT("Action '%s' already known."), *GetNameSafe(ActionToGrant));
+			const FString DebugMsg = FString::Printf(TEXT("Action '%s' already known."), *GetNameSafe(ActionToGrant));
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, DebugMsg);
 			return;
 		}
 
 		// Give new Ability
-		ActionComp->AddAction(InstigatorPawn, ActionToGrant);	
+		ActionComponent->AddAction(InstigatorPawn, ActionToGrant);	
 		HideAndCooldownPowerup();
 	}
 }

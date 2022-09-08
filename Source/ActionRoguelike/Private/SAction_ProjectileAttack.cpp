@@ -6,9 +6,6 @@
 #include "Sound/SoundBase.h"
 #include "GameFramework/Character.h"
 
-
-
-
 USAction_ProjectileAttack::USAction_ProjectileAttack()
 {
 	HandSocketName = "Muzzle_01";
@@ -18,13 +15,11 @@ USAction_ProjectileAttack::USAction_ProjectileAttack()
 	SweepDistanceFallback = 5000;
 }
 
-
 void USAction_ProjectileAttack::StartAction_Implementation(AActor* Instigator)
 {
 	Super::StartAction_Implementation(Instigator);
 
-	ACharacter* Character = Cast<ACharacter>(Instigator);
-	if (Character)
+	if (ACharacter* const Character = Cast<ACharacter>(Instigator))
 	{
 		Character->PlayAnimMontage(AttackAnim);
 
@@ -42,7 +37,6 @@ void USAction_ProjectileAttack::StartAction_Implementation(AActor* Instigator)
 		}
 	}
 }
-
 
 void USAction_ProjectileAttack::AttackDelay_Elapsed(ACharacter* InstigatorCharacter)
 {

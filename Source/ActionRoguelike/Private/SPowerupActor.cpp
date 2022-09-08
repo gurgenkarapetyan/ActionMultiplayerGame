@@ -26,24 +26,20 @@ ASPowerupActor::ASPowerupActor()
 	bReplicates = true;
 }
 
-
 void ASPowerupActor::Interact_Implementation(APawn* InstigatorPawn)
 {
 	// logic in derived classes...
 }
-
 
 FText ASPowerupActor::GetInteractText_Implementation(APawn* InstigatorPawn)
 {
 	return FText::GetEmpty();
 }
 
-
 void ASPowerupActor::ShowPowerup()
 {
 	SetPowerupState(true);
 }
-
 
 void ASPowerupActor::HideAndCooldownPowerup()
 {
@@ -58,14 +54,12 @@ void ASPowerupActor::SetPowerupState(bool bNewIsActive)
 	OnRep_IsActive();
 }
 
-
 void ASPowerupActor::OnRep_IsActive()
 {
 	SetActorEnableCollision(bIsActive);
 	// Set visibility on root and all children
 	RootComponent->SetVisibility(bIsActive, true);
 }
-
 
 void ASPowerupActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

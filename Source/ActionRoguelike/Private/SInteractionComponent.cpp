@@ -9,8 +9,6 @@
 
 static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("su.InteractionDebugDraw"), false, TEXT("Enable Debug Lines for Interact Component."), ECVF_Cheat);
 
-
-
 USInteractionComponent::USInteractionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -27,7 +25,6 @@ void USInteractionComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-
 void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -39,7 +36,6 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		FindBestInteractable();
 	}
 }
-
 
 void USInteractionComponent::FindBestInteractable()
 {
@@ -75,8 +71,7 @@ void USInteractionComponent::FindBestInteractable()
 			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, TraceRadius, 32, LineColor, false, 0.0f);
 		}
 
-		AActor* HitActor = Hit.GetActor();
-		if (HitActor)
+		if (AActor* const HitActor = Hit.GetActor())
 		{
 			if (HitActor->Implements<USGameplayInterface>())
 			{
@@ -118,12 +113,10 @@ void USInteractionComponent::FindBestInteractable()
 	}
 }
 
-
 void USInteractionComponent::PrimaryInteract()
 {
 	ServerInteract(FocusedActor);
 }
-
 
 void USInteractionComponent::ServerInteract_Implementation(AActor* InFocus)
 {
@@ -136,4 +129,3 @@ void USInteractionComponent::ServerInteract_Implementation(AActor* InFocus)
 	APawn* MyPawn = Cast<APawn>(GetOwner());
 	ISGameplayInterface::Execute_Interact(InFocus, MyPawn);
 }
-

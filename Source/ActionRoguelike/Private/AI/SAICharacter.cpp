@@ -87,7 +87,6 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 	}
 }
 
-
 void ASAICharacter::SetTargetActor(AActor* NewTarget)
 {
 	AAIController* AIC = Cast<AAIController>(GetController());
@@ -96,7 +95,6 @@ void ASAICharacter::SetTargetActor(AActor* NewTarget)
 		AIC->GetBlackboardComponent()->SetValueAsObject(TargetActorKey, NewTarget);
 	}
 }
-
 
 AActor* ASAICharacter::GetTargetActor() const
 {
@@ -108,7 +106,6 @@ AActor* ASAICharacter::GetTargetActor() const
 
 	return nullptr;
 }
-
 
 void ASAICharacter::OnPawnSeen(APawn* Pawn)
 {
@@ -122,11 +119,9 @@ void ASAICharacter::OnPawnSeen(APawn* Pawn)
 	//DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::White, 0.5f, true);
 }
 
-
 void ASAICharacter::MulticastPawnSeen_Implementation()
 {
-	USWorldUserWidget* NewWidget = CreateWidget<USWorldUserWidget>(GetWorld(), SpottedWidgetClass);
-	if (NewWidget)
+	if (USWorldUserWidget* const NewWidget = CreateWidget<USWorldUserWidget>(GetWorld(), SpottedWidgetClass))
 	{
 		NewWidget->AttachedActor = this;
 		// Index of 10 (or anything higher than default of 0) places this on top of any other widget.

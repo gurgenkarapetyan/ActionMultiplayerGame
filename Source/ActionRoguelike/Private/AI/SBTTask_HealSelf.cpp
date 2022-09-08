@@ -14,12 +14,11 @@ EBTNodeResult::Type USBTTask_HealSelf::ExecuteTask(UBehaviorTreeComponent& Owner
 		return EBTNodeResult::Failed;
 	}
 
-	USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(MyPawn);
-	if (ensure(AttributeComp))
+	USAttributeComponent* const AttributeComponent = USAttributeComponent::GetAttributes(MyPawn);
+	if (ensure(AttributeComponent))
 	{
-		AttributeComp->ApplyHealthChange(MyPawn, AttributeComp->GetHealthMax());
+		AttributeComponent->ApplyHealthChange(MyPawn, AttributeComponent->GetHealthMax());
 	}
 
 	return EBTNodeResult::Succeeded;
 }
-

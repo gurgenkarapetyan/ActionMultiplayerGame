@@ -8,8 +8,7 @@
 
 EBTNodeResult::Type UBTTask_StartAction::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	AAIController* MyController = OwnerComp.GetAIOwner();
-	if (ensure(MyController))
+	if (const AAIController* MyController = OwnerComp.GetAIOwner(); ensure(MyController))
 	{
 		APawn* MyPawn = MyController->GetPawn();
 		if (MyPawn == nullptr)
@@ -17,10 +16,9 @@ EBTNodeResult::Type UBTTask_StartAction::ExecuteTask(UBehaviorTreeComponent& Own
 			return EBTNodeResult::Failed;
 		}
 		
-		USActionComponent* ActionComp = Cast<USActionComponent>(MyPawn->GetComponentByClass(USActionComponent::StaticClass()));
-		if (ensure(ActionComp))
+		if (USActionComponent* ActionComponent = Cast<USActionComponent>(MyPawn->GetComponentByClass(USActionComponent::StaticClass())); ensure(ActionComponent))
 		{
-			if (ActionComp->StartActionByName(MyPawn, ActionName))
+			if (ActionComponent->StartActionByName(MyPawn, ActionName))
 			{
 				return EBTNodeResult::Succeeded;
 			}

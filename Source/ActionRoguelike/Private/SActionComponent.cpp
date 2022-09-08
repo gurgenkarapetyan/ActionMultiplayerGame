@@ -10,14 +10,12 @@
 
 DECLARE_CYCLE_STAT(TEXT("StartActionByName"), STAT_StartActionByName, STATGROUP_STANFORD);
 
-
 USActionComponent::USActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
 	SetIsReplicatedByDefault(true);
 }
-
 
 void USActionComponent::BeginPlay()
 {
@@ -26,13 +24,12 @@ void USActionComponent::BeginPlay()
 	// Server Only
 	if (GetOwner()->HasAuthority())
 	{
-		for (TSubclassOf<USAction> ActionClass : DefaultActions)
+		for (const TSubclassOf<USAction> ActionClass : DefaultActions)
 		{
 			AddAction(GetOwner(), ActionClass);
 		}
 	}
 }
-
 
 void USActionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
@@ -66,7 +63,6 @@ void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 // 	}
 }
 
-
 void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> ActionClass)
 {
 	if (!ensure(ActionClass))
@@ -95,7 +91,6 @@ void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> Acti
 	}
 }
 
-
 void USActionComponent::RemoveAction(USAction* ActionToRemove)
 {
 	if (!ensure(ActionToRemove && !ActionToRemove->IsRunning()))
@@ -105,7 +100,6 @@ void USActionComponent::RemoveAction(USAction* ActionToRemove)
 
 	Actions.Remove(ActionToRemove);
 }
-
 
 USAction* USActionComponent::GetAction(TSubclassOf<USAction> ActionClass) const
 {
@@ -119,7 +113,6 @@ USAction* USActionComponent::GetAction(TSubclassOf<USAction> ActionClass) const
 
 	return nullptr;
 }
-
 
 bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 {
@@ -153,7 +146,6 @@ bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 	return false;
 }
 
-
 bool USActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 {
 	for (USAction* Action : Actions)
@@ -177,18 +169,15 @@ bool USActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 	return false;
 }
 
-
 void USActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
 {
 	StartActionByName(Instigator, ActionName);
 }
 
-
 void USActionComponent::ServerStopAction_Implementation(AActor* Instigator, FName ActionName)
 {
 	StopActionByName(Instigator, ActionName);
 }
-
 
 bool USActionComponent::ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
@@ -203,7 +192,6 @@ bool USActionComponent::ReplicateSubobjects(class UActorChannel* Channel, class 
 
 	return WroteSomething;
 }
-
 
 void USActionComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

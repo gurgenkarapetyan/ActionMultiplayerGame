@@ -8,14 +8,12 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "SActionEffect.h"
 
-
 ASMagicProjectile::ASMagicProjectile()
 {
 	SphereComp->SetSphereRadius(20.0f);
 	InitialLifeSpan = 10.0f;
 	DamageAmount = 20.0f;
 }
-
 
 void ASMagicProjectile::PostInitializeComponents()
 {
@@ -25,7 +23,6 @@ void ASMagicProjectile::PostInitializeComponents()
 	// PostInitializeComponent is the preferred way of binding any events.
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASMagicProjectile::OnActorOverlap);
 }
-
 
 void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {

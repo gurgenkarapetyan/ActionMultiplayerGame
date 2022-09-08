@@ -7,7 +7,6 @@
 #include "SGameplayFunctionLibrary.h"
 
 
-
 USActionEffect_Thorns::USActionEffect_Thorns()
 {
 	ReflectFraction = 0.2f;
@@ -16,28 +15,23 @@ USActionEffect_Thorns::USActionEffect_Thorns()
 	Period = 0.0f;
 }
 
-
-
 void USActionEffect_Thorns::StartAction_Implementation(AActor* Instigator)
 {
 	Super::StartAction_Implementation(Instigator);
 
 	// Start listening
-	USAttributeComponent* Attributes = USAttributeComponent::GetAttributes(GetOwningComponent()->GetOwner());
-	if (Attributes)
+	if (USAttributeComponent* const Attributes = USAttributeComponent::GetAttributes(GetOwningComponent()->GetOwner()))
 	{
 		Attributes->OnHealthChanged.AddDynamic(this, &USActionEffect_Thorns::OnHealthChanged);
 	}
 }
-
 
 void USActionEffect_Thorns::StopAction_Implementation(AActor* Instigator)
 {
 	Super::StopAction_Implementation(Instigator);
 
 	// Stop listening
-	USAttributeComponent* Attributes = USAttributeComponent::GetAttributes(GetOwningComponent()->GetOwner());
-	if (Attributes)
+	if (USAttributeComponent* const Attributes = USAttributeComponent::GetAttributes(GetOwningComponent()->GetOwner()))
 	{
 		Attributes->OnHealthChanged.RemoveDynamic(this, &USActionEffect_Thorns::OnHealthChanged);
 	}

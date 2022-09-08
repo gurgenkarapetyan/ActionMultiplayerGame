@@ -6,13 +6,10 @@
 #include "GameFramework/GameStateBase.h"
 
 
-
-
 USActionEffect::USActionEffect()
 {
 	bAutoStart = true;
 }
-
 
 void USActionEffect::StartAction_Implementation(AActor* Instigator)
 {
@@ -34,7 +31,6 @@ void USActionEffect::StartAction_Implementation(AActor* Instigator)
 		GetWorld()->GetTimerManager().SetTimer(PeriodHandle, Delegate, Period, true);
 	}
 }
-
 
 void USActionEffect::StopAction_Implementation(AActor* Instigator)
 {

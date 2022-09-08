@@ -6,8 +6,6 @@
 #include "Net/UnrealNetwork.h"
 
 
-
-
 void ASPlayerState::AddCredits(int32 Delta)
 {
 	// Avoid user-error of adding a negative amount
@@ -20,7 +18,6 @@ void ASPlayerState::AddCredits(int32 Delta)
 
 	OnCreditsChanged.Broadcast(this, Credits, Delta);
 }
-
 
 bool ASPlayerState::RemoveCredits(int32 Delta)
 {
@@ -43,13 +40,12 @@ bool ASPlayerState::RemoveCredits(int32 Delta)
 	return true;
 }
 
-
 bool ASPlayerState::UpdatePersonalRecord(float NewTime)
 {
 	// Higher time is better
 	if (NewTime > PersonalRecordTime)
 	{
-		float OldRecord = PersonalRecordTime;
+		const float OldRecord = PersonalRecordTime;
 
 		PersonalRecordTime = NewTime;
 
@@ -60,7 +56,6 @@ bool ASPlayerState::UpdatePersonalRecord(float NewTime)
 
 	return false;
 }
-
 
 void ASPlayerState::SavePlayerState_Implementation(USSaveGame* SaveObject)
 {
@@ -74,7 +69,7 @@ void ASPlayerState::SavePlayerState_Implementation(USSaveGame* SaveObject)
 		SaveData.PlayerID = GetUniqueId().ToString();
 
 		// May not be alive while we save
-		if (APawn* MyPawn = GetPawn())
+		if (const APawn* const MyPawn = GetPawn())
 		{
 			SaveData.Location = MyPawn->GetActorLocation();
 			SaveData.Rotation = MyPawn->GetActorRotation();
@@ -85,13 +80,11 @@ void ASPlayerState::SavePlayerState_Implementation(USSaveGame* SaveObject)
 	}
 }
 
-
 void ASPlayerState::LoadPlayerState_Implementation(USSaveGame* SaveObject)
 {
 	if (SaveObject)
 	{
-		FPlayerSaveData* FoundData = SaveObject->GetPlayerData(this);
-		if (FoundData)
+		if (const FPlayerSaveData* const FoundData = SaveObject->GetPlayerData(this))
 		{
 			//Credits = SaveObject->Credits;
 			// Makes sure we trigger credits changed event
@@ -106,7 +99,6 @@ void ASPlayerState::LoadPlayerState_Implementation(USSaveGame* SaveObject)
 	}
 }
 
-
 void ASPlayerState::OnRep_Credits(int32 OldCredits)
 {
 	OnCreditsChanged.Broadcast(this, Credits, Credits - OldCredits);
@@ -118,12 +110,10 @@ void ASPlayerState::OnRep_Credits(int32 OldCredits)
 // 	OnCreditsChanged.Broadcast(this, NewCredits, Delta);
 // }
 
-
 int32 ASPlayerState::GetCredits() const
 {
 	return Credits;
 }
-
 
 void ASPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

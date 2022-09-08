@@ -6,9 +6,6 @@
 #include "Kismet/GameplayStatics.h"
 
 
-
-
-
 void ASPlayerController::TogglePauseMenu()
 {
 	if (PauseMenuInstance && PauseMenuInstance->IsInViewport())
@@ -52,7 +49,6 @@ void ASPlayerController::SetupInputComponent()
 	InputComponent->BindAction("PauseMenu", IE_Pressed, this, &ASPlayerController::TogglePauseMenu);
 }
 
-
 void ASPlayerController::SetPawn(APawn* InPawn)
 {
 	Super::SetPawn(InPawn);
@@ -60,12 +56,10 @@ void ASPlayerController::SetPawn(APawn* InPawn)
 	OnPawnChanged.Broadcast(InPawn);
 }
 
-
 void ASPlayerController::BeginPlayingState()
 {
 	BlueprintBeginPlayingState();
 }
-
 
 void ASPlayerController::OnRep_PlayerState()
 {

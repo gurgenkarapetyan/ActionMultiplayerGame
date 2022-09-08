@@ -5,31 +5,27 @@
 #include "SAttributeComponent.h"
 
 
-
-
 bool USGameplayFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
 {
-	USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(TargetActor);
-	if (AttributeComp)
+	if (USAttributeComponent* const AttributeComponent = USAttributeComponent::GetAttributes(TargetActor))
 	{
-		return AttributeComp->ApplyHealthChange(DamageCauser, -DamageAmount);
+		return AttributeComponent->ApplyHealthChange(DamageCauser, -DamageAmount);
 	}
 	return false;
 }
-
 
 bool USGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount, const FHitResult& HitResult)
 {
 	if (ApplyDamage(DamageCauser, TargetActor, DamageAmount))
 	{
-		UPrimitiveComponent* HitComp = HitResult.GetComponent();
-		if (HitComp && HitComp->IsSimulatingPhysics(HitResult.BoneName))
+		UPrimitiveComponent* const HitComponent = HitResult.GetComponent();
+		if (HitComponent && HitComponent->IsSimulatingPhysics(HitResult.BoneName))
 		{
 			// Direction = Target - Origin
 			FVector Direction = HitResult.TraceEnd - HitResult.TraceStart;
 			Direction.Normalize();
 
-			HitComp->AddImpulseAtLocation(Direction * 300000.f, HitResult.ImpactPoint, HitResult.BoneName);
+			HitComponent->AddImpulseAtLocation(Direction * 300000.f, HitResult.ImpactPoint, HitResult.BoneName);
 		}
 		return true;
 	}

@@ -36,12 +36,10 @@ ASProjectileBase::ASProjectileBase()
 	bReplicates = true;
 }
 
-
 void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	Explode();
 }
-
 
 // _Implementation from it being marked as BlueprintNativeEvent
 void ASProjectileBase::Explode_Implementation()

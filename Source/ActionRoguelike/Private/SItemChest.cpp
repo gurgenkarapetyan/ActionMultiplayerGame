@@ -6,7 +6,6 @@
 #include "Net/UnrealNetwork.h"
 
 
-
 ASItemChest::ASItemChest()
 {
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
@@ -22,7 +21,6 @@ ASItemChest::ASItemChest()
 	bReplicates = true;
 }
 
-
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
 	bLidOpened = !bLidOpened;
@@ -30,19 +28,16 @@ void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 
 }
 
-
 void ASItemChest::OnActorLoaded_Implementation()
 {
 	OnRep_LidOpened();
 }
 
-
 void ASItemChest::OnRep_LidOpened()
 {
-	float CurrPitch = bLidOpened ? TargetPitch : 0.0f;
-	LidMesh->SetRelativeRotation(FRotator(CurrPitch, 0, 0));
+	const float CurrentPitch = bLidOpened ? TargetPitch : 0.0f;
+	LidMesh->SetRelativeRotation(FRotator(CurrentPitch, 0, 0));
 }
-
 
 void ASItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

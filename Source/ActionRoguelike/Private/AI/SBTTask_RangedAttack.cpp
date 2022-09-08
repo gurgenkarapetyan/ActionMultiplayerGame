@@ -14,10 +14,9 @@ USBTTask_RangedAttack::USBTTask_RangedAttack()
 	MaxBulletSpread = 2.0f;
 }
 
-
 EBTNodeResult::Type USBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	AAIController* MyController = OwnerComp.GetAIOwner();
+	const AAIController* MyController = OwnerComp.GetAIOwner();
 	if (ensure(MyController))
 	{
 		ACharacter* MyPawn = Cast<ACharacter>(MyController->GetPawn());
@@ -37,8 +36,8 @@ EBTNodeResult::Type USBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& O
 			return EBTNodeResult::Failed;
 		}
 
-		FVector MuzzleLocation = MyPawn->GetMesh()->GetSocketLocation("Muzzle_01");
-		FVector Direction = TargetActor->GetActorLocation() - MuzzleLocation;
+		const FVector MuzzleLocation = MyPawn->GetMesh()->GetSocketLocation("Muzzle_01");
+		const FVector Direction = TargetActor->GetActorLocation() - MuzzleLocation;
 		FRotator MuzzleRotation = Direction.Rotation();
 
 		// Ignore negative pitch to not hit the floor in front itself
@@ -49,9 +48,9 @@ EBTNodeResult::Type USBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& O
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		Params.Instigator = MyPawn;
 
-		AActor* NewProj = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MuzzleRotation, Params);
+		const AActor* const NewProjectile = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MuzzleRotation, Params);
 
-		return NewProj ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
+		return NewProjectile ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 	}
 
 	return EBTNodeResult::Failed;

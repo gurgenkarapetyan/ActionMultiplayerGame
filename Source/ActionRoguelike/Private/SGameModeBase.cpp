@@ -23,10 +23,7 @@
 #include "Engine/AssetManager.h"
 
 
-
 static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), true, TEXT("Enable spawning of bots via timer."), ECVF_Cheat);
-
-
 
 ASGameModeBase::ASGameModeBase()
 {
@@ -40,7 +37,6 @@ ASGameModeBase::ASGameModeBase()
 	PlayerStateClass = ASPlayerState::StaticClass();
 }
 
-
 void ASGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
@@ -52,7 +48,6 @@ void ASGameModeBase::InitGame(const FString& MapName, const FString& Options, FS
 	FString SelectedSaveSlot = UGameplayStatics::ParseOption(Options, "SaveGame");
 	SG->LoadSaveGame(SelectedSaveSlot);
 }
-
 
 void ASGameModeBase::StartPlay()
 {
@@ -74,7 +69,6 @@ void ASGameModeBase::StartPlay()
 	}
 }
 
-
 void ASGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
 {
 	// Calling Before Super:: so we set variables before 'beginplayingstate' is called in PlayerController (which is where we instantiate UI)
@@ -87,7 +81,6 @@ void ASGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* N
 	// Alternatively we could override core spawn location to use store locations immediately (skipping the whole 'find player start' logic)
 	SG->OverrideSpawnTransform(NewPlayer);
 }
-
 
 void ASGameModeBase::KillAll()
 {
@@ -102,7 +95,6 @@ void ASGameModeBase::KillAll()
 		}
 	}
 }
-
 
 void ASGameModeBase::SpawnBotTimerElapsed()
 {
@@ -131,8 +123,8 @@ void ASGameModeBase::SpawnBotTimerElapsed()
 	{
 		ASAICharacter* Bot = *It;
 
-		USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(Bot);
-		if (ensure(AttributeComp) && AttributeComp->IsAlive())
+		const USAttributeComponent* const AttributeComponent = USAttributeComponent::GetAttributes(Bot);
+		if (ensure(AttributeComponent) && AttributeComponent->IsAlive())
 		{
 			NrOfAliveBots++;
 		}
@@ -140,7 +132,7 @@ void ASGameModeBase::SpawnBotTimerElapsed()
 
 	UE_LOG(LogTemp, Log, TEXT("Found %i alive bots."), NrOfAliveBots);
 
-	const float MaxBotCount = 40.0f;
+	constexpr float MaxBotCount = 40.0f;
 	if (NrOfAliveBots >= MaxBotCount)
 	{
 		UE_LOG(LogTemp, Log, TEXT("At maximum bot capacity. Skipping bot spawn."));
@@ -198,7 +190,6 @@ void ASGameModeBase::SpawnBotTimerElapsed()
 	}
 }
 
-
 void ASGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus)
 {
 	if (QueryStatus != EEnvQueryStatus::Success)
@@ -215,10 +206,10 @@ void ASGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper*
 			// Apply spawn cost
 			AvailableSpawnCredit -= SelectedMonsterRow->SpawnCost;
 
-			FPrimaryAssetId MonsterId = SelectedMonsterRow->MonsterId;
+			const FPrimaryAssetId MonsterId = SelectedMonsterRow->MonsterId;
 
-			TArray<FName> Bundles;
-			FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &ASGameModeBase::OnMonsterLoaded, MonsterId, Locations[0]);
+			const TArray<FName> Bundles;
+			const FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &ASGameModeBase::OnMonsterLoaded, MonsterId, Locations[0]);
 			Manager->LoadPrimaryAsset(MonsterId, Bundles, Delegate);
 		}	
 	}
@@ -229,24 +220,20 @@ void ASGameModeBase::OnMonsterLoaded(FPrimaryAssetId LoadedId, FVector SpawnLoca
 {
 	//LogOnScreen(this, "Finished loading.", FColor::Green);
 
-	UAssetManager* Manager = UAssetManager::GetIfValid();
-	if (Manager)
+	if (const UAssetManager* const AssetManager = UAssetManager::GetIfValid())
 	{
-		USMonsterData* MonsterData = Cast<USMonsterData>(Manager->GetPrimaryAssetObject(LoadedId));
-		if (MonsterData)
+		if (const USMonsterData* const MonsterData = Cast<USMonsterData>(AssetManager->GetPrimaryAssetObject(LoadedId)))
 		{
-			AActor* NewBot = GetWorld()->SpawnActor<AActor>(MonsterData->MonsterClass, SpawnLocation, FRotator::ZeroRotator);
-			if (NewBot)
+			if (AActor* const NewBot = GetWorld()->SpawnActor<AActor>(MonsterData->MonsterClass, SpawnLocation, FRotator::ZeroRotator))
 			{
 				LogOnScreen(this, FString::Printf(TEXT("Spawned enemy: %s (%s)"), *GetNameSafe(NewBot), *GetNameSafe(MonsterData)));
 
 				// Grant special actions, buffs etc.
-				USActionComponent* ActionComp = Cast<USActionComponent>(NewBot->GetComponentByClass(USActionComponent::StaticClass()));
-				if (ActionComp)
+				if (USActionComponent* const ActionComponent = Cast<USActionComponent>(NewBot->GetComponentByClass(USActionComponent::StaticClass())))
 				{
-					for (TSubclassOf<USAction> ActionClass : MonsterData->Actions)
+					for (const TSubclassOf<USAction> ActionClass : MonsterData->Actions)
 					{
-						ActionComp->AddAction(NewBot, ActionClass);
+						ActionComponent->AddAction(NewBot, ActionClass);
 					}
 				}
 			}
@@ -273,7 +260,7 @@ void ASGameModeBase::OnPowerupSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrap
 	while (SpawnCounter < DesiredPowerupCount && Locations.Num() > 0)
 	{
 		// Pick a random location from remaining points.
-		int32 RandomLocationIndex = FMath::RandRange(0, Locations.Num() - 1);
+		const int32 RandomLocationIndex = FMath::RandRange(0, Locations.Num() - 1);
 
 		FVector PickedLocation = Locations[RandomLocationIndex];
 		// Remove to avoid picking again
@@ -283,7 +270,7 @@ void ASGameModeBase::OnPowerupSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrap
 		bool bValidLocation = true;
 		for (FVector OtherLocation : UsedLocations)
 		{
-			float DistanceTo = (PickedLocation - OtherLocation).Size();
+			const float DistanceTo = (PickedLocation - OtherLocation).Size();
 
 			if (DistanceTo < RequiredPowerupDistance)
 			{
@@ -303,7 +290,7 @@ void ASGameModeBase::OnPowerupSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrap
 		}
 
 		// Pick a random powerup-class
-		int32 RandomClassIndex = FMath::RandRange(0, PowerupClasses.Num() - 1);
+		const int32 RandomClassIndex = FMath::RandRange(0, PowerupClasses.Num() - 1);
 		TSubclassOf<AActor> RandomPowerupClass = PowerupClasses[RandomClassIndex];
 
 		GetWorld()->SpawnActor<AActor>(RandomPowerupClass, PickedLocation, FRotator::ZeroRotator);
@@ -314,7 +301,6 @@ void ASGameModeBase::OnPowerupSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrap
 	}
 }
 
-
 void ASGameModeBase::RespawnPlayerElapsed(AController* Controller)
 {
 	if (ensure(Controller))
@@ -324,7 +310,6 @@ void ASGameModeBase::RespawnPlayerElapsed(AController* Controller)
 		RestartPlayer(Controller);
 	}
 }
-
 
 void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 {
@@ -343,10 +328,9 @@ void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 // 		GetWorldTimerManager().SetTimer(TimerHandle_RespawnDelay, Delegate, RespawnDelay, false);
 
 		// Store time if it was better than previous record
-		ASPlayerState* PS = Player->GetPlayerState<ASPlayerState>();
-		if (PS)
+		if (ASPlayerState* const PlayerState = Player->GetPlayerState<ASPlayerState>())
 		{
-			PS->UpdatePersonalRecord(GetWorld()->TimeSeconds);
+			PlayerState->UpdatePersonalRecord(GetWorld()->TimeSeconds);
 		}
 
 		USSaveGameSubsystem* SG = GetGameInstance()->GetSubsystem<USSaveGameSubsystem>();
@@ -355,15 +339,14 @@ void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 	}
 
 	// Give Credits for kill
-	APawn* KillerPawn = Cast<APawn>(Killer);
+	const APawn* const KillerPawn = Cast<APawn>(Killer);
 	// Don't credit kills of self
 	if (KillerPawn && KillerPawn != VictimActor)
 	{
 		// Only Players will have a 'PlayerState' instance, bots have nullptr
-		ASPlayerState* PS = KillerPawn->GetPlayerState<ASPlayerState>();
-		if (PS) 
+		if (ASPlayerState* const PlayerState = KillerPawn->GetPlayerState<ASPlayerState>()) 
 		{
-			PS->AddCredits(CreditsPerKill);
+			PlayerState->AddCredits(CreditsPerKill);
 		}
 	}
 }

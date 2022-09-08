@@ -7,9 +7,6 @@
 #include "Components/SizeBox.h"
 
 
-
-
-
 void USWorldUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
@@ -23,11 +20,11 @@ void USWorldUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 	}
 
 	FVector2D ScreenPosition;
-	bool bIsOnScreen = UGameplayStatics::ProjectWorldToScreen(GetOwningPlayer(), AttachedActor->GetActorLocation() + WorldOffset, ScreenPosition);
+	const bool bIsOnScreen = UGameplayStatics::ProjectWorldToScreen(GetOwningPlayer(), AttachedActor->GetActorLocation() + WorldOffset, ScreenPosition);
 
 	if (bIsOnScreen)
 	{
-		float Scale = UWidgetLayoutLibrary::GetViewportScale(this);
+		const float Scale = UWidgetLayoutLibrary::GetViewportScale(this);
 
 		ScreenPosition /= Scale;
 

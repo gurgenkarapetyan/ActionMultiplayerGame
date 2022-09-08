@@ -47,7 +47,6 @@ ASCharacter::ASCharacter()
 	TimeToHitParamName = "TimeToHit";
 }
 
-
 void ASCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -55,12 +54,10 @@ void ASCharacter::PostInitializeComponents()
 	AttributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
 
-
 FVector ASCharacter::GetPawnViewLocation() const
 {
 	return CameraComp->GetComponentLocation();
 }
-
 
 // Called to bind functionality to input
 void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -85,12 +82,10 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 }
 
-
 void ASCharacter::HealSelf(float Amount /* = 100 */)
 {
 	AttributeComp->ApplyHealthChange(this, Amount);
 }
-
 
 void ASCharacter::MoveForward(float Value)
 {
@@ -100,7 +95,6 @@ void ASCharacter::MoveForward(float Value)
 
 	AddMovementInput(ControlRot.Vector(), Value);
 }
-
 
 void ASCharacter::MoveRight(float Value)
 {
@@ -117,7 +111,6 @@ void ASCharacter::MoveRight(float Value)
 	AddMovementInput(RightVector, Value);
 }
 
-
 void ASCharacter::SprintStart()
 {
 	ActionComp->StartActionByName(this, "Sprint");
@@ -128,25 +121,20 @@ void ASCharacter::SprintStop()
 	ActionComp->StopActionByName(this, "Sprint");
 }
 
-
 void ASCharacter::PrimaryAttack()
 {
 	ActionComp->StartActionByName(this, "PrimaryAttack");
 }
-
-
 
 void ASCharacter::BlackHoleAttack()
 {
 	ActionComp->StartActionByName(this, "Blackhole");
 }
 
-
 void ASCharacter::Dash()
 {
 	ActionComp->StartActionByName(this, "Dash");
 }
-
 
 void ASCharacter::PrimaryInteract()
 {
@@ -155,7 +143,6 @@ void ASCharacter::PrimaryInteract()
 		InteractionComp->PrimaryInteract();
 	}
 }
-
 
 void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
 {

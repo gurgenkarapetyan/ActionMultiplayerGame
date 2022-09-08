@@ -90,9 +90,9 @@ protected:
 	
 	void PostSignificanceUpdate(USignificanceManager::FManagedObjectInfo* ObjectInfo, float OldSignificance, float Significance, bool bFinal);
 
-	float GetSignificanceByDistance(float DistanceSqrd) const;
+	float GetSignificanceByDistance(const float DistanceSqrd) const;
 
-	void UpdateParticleSignificance(float NewSignificance);
+	void UpdateParticleSignificance(const float NewSignificance) const;
 
 public:
 	

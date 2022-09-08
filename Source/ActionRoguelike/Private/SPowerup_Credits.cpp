@@ -5,12 +5,10 @@
 #include "SPlayerState.h"
 
 
-
 ASPowerup_Credits::ASPowerup_Credits()
 {
 	CreditsAmount = 80;
 }
-
 
 void ASPowerup_Credits::Interact_Implementation(APawn* InstigatorPawn)
 {
@@ -19,9 +17,9 @@ void ASPowerup_Credits::Interact_Implementation(APawn* InstigatorPawn)
 		return;
 	}
 
-	if (ASPlayerState* PS = InstigatorPawn->GetPlayerState<ASPlayerState>())
+	if (ASPlayerState* PlayerState = InstigatorPawn->GetPlayerState<ASPlayerState>())
 	{
-		PS->AddCredits(CreditsAmount);
+		PlayerState->AddCredits(CreditsAmount);
 		HideAndCooldownPowerup();
 	}
 }

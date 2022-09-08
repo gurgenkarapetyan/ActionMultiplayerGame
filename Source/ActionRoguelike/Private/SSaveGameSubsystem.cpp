@@ -13,7 +13,6 @@
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 
 
-
 void USSaveGameSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -27,7 +26,6 @@ void USSaveGameSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	//DummyTable->GetAllRows() // We don't need this table for anything, just an content reference example
 }
 
-
 void USSaveGameSubsystem::HandleStartingNewPlayer(AController* NewPlayer)
 {
 	ASPlayerState* PS = NewPlayer->GetPlayerState<ASPlayerState>();
@@ -36,7 +34,6 @@ void USSaveGameSubsystem::HandleStartingNewPlayer(AController* NewPlayer)
 		PS->LoadPlayerState(CurrentSaveGame);
 	}
 }
-
 
 bool USSaveGameSubsystem::OverrideSpawnTransform(AController* NewPlayer)
 {
@@ -71,7 +68,6 @@ bool USSaveGameSubsystem::OverrideSpawnTransform(AController* NewPlayer)
 	return false;
 }
 
-
 void USSaveGameSubsystem::SetSlotName(FString NewSlotName)
 {
 	// Ignore empty name
@@ -83,27 +79,25 @@ void USSaveGameSubsystem::SetSlotName(FString NewSlotName)
 	CurrentSlotName = NewSlotName;
 }
 
-
 void USSaveGameSubsystem::WriteSaveGame()
 {
 	// Clear arrays, may contain data from previously loaded SaveGame
 	CurrentSaveGame->SavedPlayers.Empty();
 	CurrentSaveGame->SavedActors.Empty();
 
-	AGameStateBase* GS = GetWorld()->GetGameState();
-	if (GS == nullptr)
+	const AGameStateBase* const GameState = GetWorld()->GetGameState();
+	if (GameState == nullptr)
 	{
 		// Warn about failure to save?
 		return;
 	}
 	
 	// Iterate all player states, we don't have proper ID to match yet (requires Steam or EOS)
-	for (int32 i = 0; i < GS->PlayerArray.Num(); i++)
+	for (int32 i = 0; i < GameState->PlayerArray.Num(); i++)
 	{
-		ASPlayerState* PS = Cast<ASPlayerState>(GS->PlayerArray[i]);
-		if (PS)
+		if (ASPlayerState* const PlayerState = Cast<ASPlayerState>(GameState->PlayerArray[i]))
 		{
-			PS->SavePlayerState(CurrentSaveGame);
+			PlayerState->SavePlayerState(CurrentSaveGame);
 			break; // single player only at this point
 		}
 	}
@@ -139,7 +133,6 @@ void USSaveGameSubsystem::WriteSaveGame()
 
 	OnSaveGameWritten.Broadcast(CurrentSaveGame);
 }
-
 
 void USSaveGameSubsystem::LoadSaveGame(FString InSlotName /*= ""*/)
 {

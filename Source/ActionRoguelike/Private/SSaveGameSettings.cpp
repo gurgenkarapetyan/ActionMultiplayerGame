@@ -4,8 +4,6 @@
 #include "SSaveGameSettings.h"
 
 
-
-
 USSaveGameSettings::USSaveGameSettings()
 {
 	// Default value while nothing is specified in the DefaultGame.ini

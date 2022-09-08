@@ -6,33 +6,27 @@
 #include "AIController.h"
 
 
-
-
 USBTService_CheckAttackRange::USBTService_CheckAttackRange()
 {
 	MaxAttackRange = 2000.f;
 }
-
 
 void USBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
 	// Check distance between ai pawn and target actor
-	UBlackboardComponent* BlackBoardComp = OwnerComp.GetBlackboardComponent();
-	if (ensure(BlackBoardComp))
+	if (UBlackboardComponent* const BlackBoardComp = OwnerComp.GetBlackboardComponent(); ensure(BlackBoardComp))
 	{
-		AActor* TargetActor = Cast<AActor>(BlackBoardComp->GetValueAsObject("TargetActor"));
-		if (TargetActor)
+		if (const AActor* const TargetActor = Cast<AActor>(BlackBoardComp->GetValueAsObject("TargetActor")))
 		{
-			AAIController* MyController = OwnerComp.GetAIOwner();
+			const AAIController* const MyController = OwnerComp.GetAIOwner();
 
-			APawn* AIPawn = MyController->GetPawn();
-			if (ensure(AIPawn))
+			if (const APawn* const AIPawn = MyController->GetPawn(); ensure(AIPawn))
 			{
-				float DistanceTo = FVector::Distance(TargetActor->GetActorLocation(), AIPawn->GetActorLocation());
+				const float DistanceTo = FVector::Distance(TargetActor->GetActorLocation(), AIPawn->GetActorLocation());
 
-				bool bWithinRange = DistanceTo < MaxAttackRange;
+				const bool bWithinRange = DistanceTo < MaxAttackRange;
 
 				bool bHasLOS = false;
 				if (bWithinRange)

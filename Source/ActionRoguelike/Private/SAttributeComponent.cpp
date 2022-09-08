@@ -26,18 +26,15 @@ bool USAttributeComponent::Kill(AActor* InstigatorActor)
 	return ApplyHealthChange(InstigatorActor, -GetHealthMax());
 }
 
-
 bool USAttributeComponent::IsAlive() const
 {
 	return Health > 0.0f;
 }
 
-
 bool USAttributeComponent::IsFullHealth() const
 {
 	return Health == HealthMax;
 }
-
 
 float USAttributeComponent::GetHealth() const
 {
@@ -49,7 +46,6 @@ float USAttributeComponent::GetHealthMax() const
 	return HealthMax;
 }
 
-
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
 	if (!GetOwner()->CanBeDamaged() && Delta < 0.0f)
@@ -59,15 +55,15 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 
 	if (Delta < 0.0f)
 	{
-		float DamageMultiplier = CVarDamageMultiplier.GetValueOnGameThread();
+		const float DamageMultiplier = CVarDamageMultiplier.GetValueOnGameThread();
 
 		Delta *= DamageMultiplier;
 	}
 
-	float OldHealth = Health;
-	float NewHealth = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
+	const float OldHealth = Health;
+	const float NewHealth = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
 
-	float ActualDelta = NewHealth - OldHealth;
+	const float ActualDelta = NewHealth - OldHealth;
 
 	// Is Server?
 	if (GetOwner()->HasAuthority())
@@ -93,20 +89,18 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	return ActualDelta != 0;
 }
 
-
 float USAttributeComponent::GetRage() const
 {
 	return Rage;
 }
 
-
 bool USAttributeComponent::ApplyRage(AActor* InstigatorActor, float Delta)
 {
-	float OldRage = Rage;
+	const float OldRage = Rage;
 
 	Rage = FMath::Clamp(Rage + Delta, 0.0f, RageMax);
 
-	float ActualDelta = Rage - OldRage;
+	const float ActualDelta = Rage - OldRage;
 	if (ActualDelta != 0.0f)
 	{
 		OnRageChanged.Broadcast(InstigatorActor, this, Rage, ActualDelta);
@@ -127,18 +121,15 @@ USAttributeComponent* USAttributeComponent::GetAttributes(AActor* FromActor)
 	return nullptr;
 }
 
-
 bool USAttributeComponent::IsActorAlive(AActor* Actor)
 {
-	USAttributeComponent* AttributeComp = GetAttributes(Actor);
-	if (AttributeComp)
+	if (USAttributeComponent* AttributeComponent = GetAttributes(Actor))
 	{
-		return AttributeComp->IsAlive();
+		return AttributeComponent->IsAlive();
 	}
 
 	return false;
 }
-
 
 void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* InstigatorActor, float NewHealth, float Delta)
 {
@@ -149,7 +140,6 @@ void USAttributeComponent::MulticastRageChanged_Implementation(AActor* Instigato
 {
 	OnRageChanged.Broadcast(InstigatorActor, this, NewRage, Delta);
 }
-
 
 void USAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

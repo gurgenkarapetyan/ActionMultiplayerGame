@@ -3,37 +3,42 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SGameplayInterface.h"
 #include "GameFramework/Actor.h"
+#include "SGameplayInterface.h"
 #include "SItemChest.generated.h"
+
+class UStaticMeshComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASItemChest : public AActor, public ISGameplayInterface
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this actor's properties
-	ASItemChest();
+public:
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere)
+	float TargetPitch;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	void Interact_Implementation(APawn* InstigatorPawn);
 
-private:
-	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
+	void OnActorLoaded_Implementation();
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+
+	UPROPERTY(ReplicatedUsing="OnRep_LidOpened", BlueprintReadOnly, SaveGame) // RepNotify
+	bool bLidOpened;
+
+	UFUNCTION()
+	void OnRep_LidOpened();
+
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* LidMesh;
 
-private:
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	float TargetPitch;
+public:	
+
+	// Sets default values for this actor's properties
+	ASItemChest();
 };

@@ -9,53 +9,66 @@
 class UCameraComponent;
 class USpringArmComponent;
 class USInteractionComponent;
+class UAnimMontage;
 class USAttributeComponent;
+class UParticleSystem;
 class USActionComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 {
 	GENERATED_BODY()
-	
-public:	
-	ASCharacter();
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
+
+	/* VisibleAnywhere = read-only, still useful to view in-editor and enforce a convention. */
+	UPROPERTY(VisibleAnywhere, Category = "Effects")
+	FName TimeToHitParamName;
+
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* CameraComp;
+
+	UPROPERTY(VisibleAnywhere)
+	USInteractionComponent* InteractionComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USAttributeComponent* AttributeComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USActionComponent* ActionComp;
+
 	void MoveForward(float Value);
+
 	void MoveRight(float Value);
 
 	void SprintStart();
 
 	void SprintStop();
-	
+
 	void PrimaryAttack();
+
+	void BlackHoleAttack();
+
+	void Dash();
+
 	void PrimaryInteract();
 
-	void PrimaryAttackTimeElapsed();
-	
-protected:
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* SpringArmComponent;
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* CameraComponent;
+	virtual void PostInitializeComponents() override;
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> ProjectileClass;
+	virtual FVector GetPawnViewLocation() const override;
 
-	UPROPERTY(VisibleAnywhere)
-	USInteractionComponent* InteractionComponent;
+public:	
 
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	UAnimMontage* AttackAnimMontage;
+	ASCharacter();
 
-	FTimerHandle PrimaryAttackTimerHandle;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USAttributeComponent* AttributeComponent;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USActionComponent* ActionComponent;
+	UFUNCTION(Exec)
+	void HealSelf(float Amount = 100);
 };

@@ -2,38 +2,51 @@
 
 
 #include "SItemChest.h"
+#include "Components/StaticMeshComponent.h"
+#include "Net/UnrealNetwork.h"
 
-// Sets default values
+
+
 ASItemChest::ASItemChest()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Base Mesh"));
+	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	RootComponent = BaseMesh;
 
-	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Lid Mesh"));
+	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMesh"));
 	LidMesh->SetupAttachment(BaseMesh);
 
-	TargetPitch = 110.f;
+	TargetPitch = 110;
+
+	// Directly set bool instead of going through SetReplicates(true) within constructor,
+	// Only use SetReplicates() outside constructor
+	bReplicates = true;
 }
 
-// Called when the game starts or when spawned
-void ASItemChest::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ASItemChest::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	ISGameplayInterface::Interact_Implementation(InstigatorPawn);
-	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0.f, 0.f));
+	bLidOpened = !bLidOpened;
+	OnRep_LidOpened();
+
+}
+
+
+void ASItemChest::OnActorLoaded_Implementation()
+{
+	OnRep_LidOpened();
+}
+
+
+void ASItemChest::OnRep_LidOpened()
+{
+	float CurrPitch = bLidOpened ? TargetPitch : 0.0f;
+	LidMesh->SetRelativeRotation(FRotator(CurrPitch, 0, 0));
+}
+
+
+void ASItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASItemChest, bLidOpened);
 }

@@ -6,7 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "SExplosiveBarrel.generated.h"
 
+
+class UStaticMeshComponent;
 class URadialForceComponent;
+
 
 UCLASS()
 class ACTIONROGUELIKE_API ASExplosiveBarrel : public AActor
@@ -18,18 +21,17 @@ public:
 	ASExplosiveBarrel();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* MeshComp;
+
+	UPROPERTY(VisibleAnywhere)
+	URadialForceComponent* ForceComp;
 
 	virtual void PostInitializeComponents() override;
 
+	// Must be marked with ufunction in order to 'bind' the event
 	UFUNCTION()
 	void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-	
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* MeshComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	URadialForceComponent* ForceComponent;
 };
